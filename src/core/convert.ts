@@ -138,8 +138,9 @@ function headerHost(headers: Json | undefined): string {
 }
 function outboundConfiguration(outbound: JsonObject, root: JsonObject, index: number): ConfigItem | undefined {
   const protocol = str(outbound.protocol).toLowerCase();
-  if (['freedom', 'blackhole', 'dns', 'loopback', ''].includes(protocol)) return undefined;
-  const count = Array.isArray(root.outbounds) ? root.outbounds.filter(o => object(o) && !['freedom', 'blackhole', 'dns'].includes(str(o.protocol))).length : 1;
+  const passthrough = ['freedom', 'blackhole', 'dns', 'loopback', ''];
+  if (passthrough.includes(protocol)) return undefined;
+  const count = Array.isArray(root.outbounds) ? root.outbounds.filter(o => object(o) && !passthrough.includes(str(o.protocol).toLowerCase())).length : 1;
   const name = `${str(root.remarks) || str(outbound.tag) || 'کانفیگ'}${count > 1 ? ` · ${str(outbound.tag) || index + 1}` : ''}`;
   const settings = object(outbound.settings) ? outbound.settings : {};
   const stream = object(outbound.streamSettings) ? outbound.streamSettings : {};
@@ -256,7 +257,26 @@ export function uriConfiguration(uri: string): ConfigItem {
   if (protocol === 'vmess') {
     const value = parseJson(unbase64(uri.slice(8).split('#')[0]!));
     if (object(value)) { item.name = str(value.ps) || item.name; item.host = str(value.add); item.port = integer(value.port); item.transport = str(value.net); item.security = str(value.tls); }
-  } else if (protocol !== 'ss') {
+  } else if (protocol === 'ss') {
+    // ss URLs are not standard authorities; recover the endpoint the same way the validator does.
+    try {
+      const body = uri.slice(5).split('#')[0]!;
+      const at = body.lastIndexOf('@');
+      const decoded = new TextDecoder().decode(unbase64(at >= 0 ? body.slice(0, at) : body));
+      const full = at >= 0 ? `${decoded}@${body.slice(at + 1)}` : decoded;
+      const split = full.lastIndexOf('@');
+      if (split > 0) {
+        const end = endpoint({ address: full.slice(split + 1).split('/')[0]! });
+        item.host = end.host;
+        item.port = end.port;
+      }
+    } catch { /* the link remains usable even if the endpoint cannot be shown */ }
+    const hashIndex = uri.indexOf('#');
+    if (hashIndex >= 0) {
+      try { item.name = decodeURIComponent(uri.slice(hashIndex + 1)) || item.name; }
+      catch { item.name = uri.slice(hashIndex + 1) || item.name; }
+    }
+  } else {
     const url = new URL(uri);
     try { item.name = decodeURIComponent(url.hash.slice(1)) || item.name; } catch { item.name = url.hash.slice(1) || item.name; }
     item.host = url.hostname; item.port = integer(url.port);

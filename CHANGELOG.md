@@ -3,6 +3,33 @@
 All notable changes to Open NPV are documented here. This project follows
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.1] — 2026-11-06
+
+### Fixed
+- Embedded `ss://` share links inside exports now recover the endpoint (host/port)
+  and fragment name, so those cards behave like the other protocols in search and copy.
+- Multi-outbound name suffix no longer counts `loopback` outbounds (it skipped them
+  for output but included them in the tally).
+- Downloaded file names now strip the `.npvo` extension as well.
+- The passphrase unwrap key is zeroed after use on the success path too.
+- The offline-cache build hash no longer depends on the OS path separator, so identical
+  content produces the same Service Worker version everywhere.
+- `package-lock.json` was behind `package.json`; both now match at 0.2.1.
+- Pending, locked and failed file groups are no longer hidden when a search/protocol
+  filter is active; a filter must never conceal a password prompt or an error.
+- The preview server answers only GET/HEAD (405 otherwise), strips the body for HEAD
+  and sends a correct Content-Length.
+
+### Removed
+- First-time "publish on GitHub Pages" setup instructions and the `release:zip` helper;
+  the repository and site are already live at https://kourosh242.github.io/open-NPV/
+  and every push to `main` deploys automatically. `docs/DEPLOY.fa.md` now covers the
+  automated flow and troubleshooting only.
+
+### Added
+- Unit coverage for embedded share-link extraction (20 tests in total).
+- Repository homepage and `og:url` point at https://kourosh242.github.io/open-NPV/.
+
 ## [0.2.0] — 2026-10-30
 
 ### Added
@@ -16,7 +43,7 @@ All notable changes to Open NPV are documented here. This project follows
 - Sticky mobile action bar for copy and ZIP.
 - System-aware theme with a pre-paint `theme.js` (no colour flash).
 - Update consent dialog: a new version never discards open results silently.
-- Author attribution for [kourosh242](https://github.com/kourosh242) across the UI,
+- Author attribution for [Kourosh242](https://github.com/Kourosh242) across the UI,
   manifest, package metadata and documentation.
 - `docs/DEPLOY.fa.md`, `docs/UI-UX.md`, `CONTRIBUTING.md`, issue templates.
 - `npm run verify` and `npm run release:zip`.

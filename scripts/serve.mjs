@@ -11,6 +11,11 @@ const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; ch
 
 const server = createServer(async (req, res) => {
   try {
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      res.writeHead(405, { Allow: 'GET, HEAD', 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('Method not allowed');
+      return;
+    }
     const url = new URL(req.url || '/', 'http://preview.local');
     let pathname = decodeURIComponent(url.pathname);
     if (base !== '/') {
@@ -20,10 +25,11 @@ const server = createServer(async (req, res) => {
     }
     let path = resolve(root, '.' + pathname);
     if (path !== root && !path.startsWith(root + sep)) { res.writeHead(403); res.end('Forbidden'); return; }
-    if ((await stat(path)).isDirectory()) path = resolve(path, 'index.html');
+    const info = await stat(path);
+    if (info.isDirectory()) path = resolve(path, 'index.html');
     const data = await readFile(path);
-    res.writeHead(200, { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer' });
-    res.end(data);
+    res.writeHead(200, { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Content-Length': data.length });
+    res.end(req.method === 'HEAD' ? undefined : data);
   } catch { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('Not found'); }
 });
 server.listen(port, '0.0.0.0', () => {

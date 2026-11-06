@@ -154,7 +154,9 @@ function applyFilter(): void {
   let shown = 0;
   for (const group of Array.from($('results').children) as HTMLElement[]) {
     const cards = Array.from(group.querySelectorAll<HTMLElement>('.config-card'));
-    if (!cards.length) { group.hidden = active; continue; }
+    // Pending, locked and failed files stay visible: they carry a user action,
+    // not a filterable result.
+    if (!cards.length) { group.hidden = false; continue; }
     const entry = entries.find(item => item.id === Number(group.dataset.entry));
     let visible = 0;
     for (const card of cards) {
@@ -545,7 +547,7 @@ async function downloadAll(trigger?: HTMLButtonElement): Promise<void> {
   });
   if (links.length) files['links.txt'] = links.join('\n') + '\n';
   files['report.json'] = JSON.stringify({
-    generator: 'Open NPV 0.2.0',
+    generator: 'Open NPV 0.2.1',
     generatedAt: new Date().toISOString(),
     filter: { protocol: protocolFilter, query: $<HTMLInputElement>('search-input').value.trim() },
     configs: report,
