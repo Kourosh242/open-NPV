@@ -11,15 +11,15 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/kourosh242/open-npv/actions/workflows/deploy.yml"><img alt="Deploy" src="https://github.com/kourosh242/open-npv/actions/workflows/deploy.yml/badge.svg"></a>
+  <a href="https://github.com/Kourosh242/open-NPV/actions/workflows/deploy.yml"><img alt="Deploy" src="https://github.com/Kourosh242/open-NPV/actions/workflows/deploy.yml/badge.svg"></a>
   <img alt="License" src="https://img.shields.io/badge/license-AGPL--3.0--only-blue">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.2.0-6ee7b7">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.2.1-6ee7b7">
 </p>
 
 <p align="center">
-  سازنده: <a href="https://github.com/kourosh242"><b>kourosh242</b></a>
+  سازنده: <a href="https://github.com/Kourosh242"><b>Kourosh242</b></a>
   ·
-  <a href="https://kourosh242.github.io/open-npv/">نسخهٔ آنلاین</a>
+  <a href="https://kourosh242.github.io/open-NPV/">نسخهٔ آنلاین</a>
 </p>
 
 ---
@@ -34,7 +34,6 @@
 
 - [ویژگی‌ها](#ویژگیها)
 - [پشتیبانی قالب‌ها](#پشتیبانی-قالبها)
-- [انتشار روی GitHub Pages](#انتشار-روی-github-pages)
 - [اجرای محلی](#اجرای-محلی)
 - [حریم خصوصی و مرز اعتماد](#حریم-خصوصی-و-مرز-اعتماد)
 - [معماری](#معماری)
@@ -74,55 +73,6 @@
 
 > ⚠️ **JSON بازیابی‌شده ≠ قابل ایمپورت در هر کلاینت.** فیلدهای اختصاصی NPV ممکن است در برنامهٔ دیگر معادل نداشته باشند. لینک اشتراک هم DNS، مسیریابی و تنظیمات کامل Xray را حمل نمی‌کند.
 
-## انتشار روی GitHub Pages
-
-همه‌چیز آماده است؛ فقط push و commit لازم دارد.
-
-### ۱) مخزن بسازید
-
-در GitHub یک مخزن عمومی به نام **`open-npv`** بسازید (بدون README اولیه).
-
-### ۲) فایل زیپ را استخراج کنید
-
-فایل **`open-npv-main.zip`** را دانلود و **در ریشهٔ پوشهٔ مخزن** استخراج کنید. بعد از استخراج باید این‌ها کنار هم دیده شوند:
-
-```
-open-npv/
-├── .github/workflows/deploy.yml   ← ورک‌فلوی آماده
-├── public/  src/  scripts/  tests/  vendor/  docs/
-├── package.json  package-lock.json
-├── README.md  LICENSE  NOTICE  SECURITY.md
-└── .gitignore  .gitattributes
-```
-
-> داخل زیپ هیچ پوشهٔ اضافی، `node_modules`، خروجی build یا فایل خصوصی وجود ندارد.
-
-### ۳) Pages را روی Actions بگذارید
-
-`Settings → Pages → Build and deployment → Source` را روی **GitHub Actions** بگذارید.
-
-### ۴) کامیت و پوش کنید
-
-```bash
-cd open-npv
-git init
-git add .
-git commit -m "feat: Open NPV 0.2.0 — local NPVT/NPVS extractor"
-git branch -M main
-git remote add origin https://github.com/kourosh242/open-npv.git
-git push -u origin main
-```
-
-تمام. ورک‌فلو خودش تست‌ها را اجرا می‌کند، سایت را می‌سازد و منتشر می‌کند:
-
-```
-https://kourosh242.github.io/open-npv/
-```
-
-از این به بعد **هر push به `main`** یعنی دیپلوی خودکار. در Pull Request ها فقط تست اجرا می‌شود و چیزی منتشر نمی‌شود.
-
-راهنمای کامل با عیب‌یابی: [`docs/DEPLOY.fa.md`](docs/DEPLOY.fa.md)
-
 ## اجرای محلی
 
 نیازمندی: **Node.js 20.19+** و npm.
@@ -139,12 +89,6 @@ npm run preview    # http://localhost:3000
 npx playwright install chromium
 ```
 
-ساخت زیپ انتشار:
-
-```bash
-npm run release:zip   # → release/open-npv-main.zip
-```
-
 | دستور | کار |
 |---|---|
 | `npm run typecheck` | بررسی تایپ TypeScript |
@@ -154,7 +98,6 @@ npm run release:zip   # → release/open-npv-main.zip
 | `npm run check` | تایپ‌چک + تست واحد + build |
 | `npm run verify` | `check` + تست مرورگر |
 | `npm run preview` | سرور محلی روی `0.0.0.0:3000` |
-| `npm run release:zip` | ساخت زیپ قابل استخراج در مخزن |
 
 > `index.html` را با `file://` باز نکنید؛ Worker و Service Worker به وب‌سرور نیاز دارند.
 
@@ -179,7 +122,7 @@ src/worker.ts  پردازش و ZIP خارج از نخ اصلی
 src/app.ts     رابط فارسی، کلیپ‌بورد، دانلود، فیلتر
 public/        پوستهٔ استاتیک، فونت و آیکون محلی، theme.js
 vendor/        جدول‌های قالب با نسخه و چک‌سام ثابت
-scripts/       build، سرور پیش‌نمایش، ساخت زیپ انتشار
+scripts/       build، سرور پیش‌نمایش، تولید جدول‌های قالب
 tests/         نمونه‌های ساختگی، مولد Go، تست مرورگر
 docs/          پژوهش قالب‌ها، راهنمای دیپلوی، یادداشت UI/UX
 site/          خروجی قابل انتشار (در Git کامیت نمی‌شود)
@@ -189,7 +132,7 @@ site/          خروجی قابل انتشار (در Git کامیت نمی‌ش
 
 ## تست‌ها
 
-- **۱۹ تست واحد**: ۲۴ بردار نسل ۲ و ۱۲۰ بردار CTR از اجرای مستقل Go، شش پوش ساختگی، رمز اشتباه/گم‌شده، دستکاری AEAD، فایل ناقص، Base64 و JSON ناسالم، IPv6/REALITY/Host/SNI، حفظ JSON خام، مقاومت در برابر prototype pollution.
+- **۲۰ تست واحد**: ۲۴ بردار نسل ۲ و ۱۲۰ بردار CTR از اجرای مستقل Go، شش پوش ساختگی، رمز اشتباه/گم‌شده، دستکاری AEAD، فایل ناقص، Base64 و JSON ناسالم، IPv6/REALITY/Host/SNI، حفظ JSON خام، مقاومت در برابر prototype pollution.
 - **تست مرورگر (Playwright)**: رمزگشایی در Worker، نمونهٔ ساختگی، تلاش دوبارهٔ گذرواژه، نمایش/پنهان‌سازی، کپی و بازخورد دکمه، دانلود TXT/JSON/ZIP، جست‌وجو و فیلتر، حذف تکی، خطای فایل خراب، کش اتمی و محدود به مسیر، **بارگذاری و رمزگشایی آفلاین**، به‌روزرسانی با رضایت کاربر، پوستهٔ بدون پرش، چیدمان موبایل، و **نبود هرگونه درخواست خارجی یا آپلود**.
 
 نمونه‌های داخل `tests/fixtures/` همگی **ساختگی** هستند (میزبان‌های `example.invalid` و کلیدهای نمایشی). هیچ فایل واقعی کاربر در مخزن نیست.

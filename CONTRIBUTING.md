@@ -1,6 +1,6 @@
 # Contributing to Open NPV
 
-Thanks for helping. Open NPV is maintained by [Kourosh](https://github.com/kourosh242).
+Thanks for helping. Open NPV is maintained by [Kourosh](https://github.com/Kourosh242).
 
 ## Ground rules
 

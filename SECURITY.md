@@ -1,8 +1,8 @@
 # Security policy
 
-Maintainer: [Kourosh](https://github.com/kourosh242).
+Maintainer: [Kourosh](https://github.com/Kourosh242).
 
-Open NPV 0.1.x is an initial release. Please report vulnerabilities through the repository's private vulnerability reporting facility once enabled, or contact the repository owner privately. Do not attach real configuration files, passwords, UUIDs, server addresses, or decrypted output to a public issue.
+Open NPV 0.2.x is the current series. Please report vulnerabilities through the repository's private vulnerability reporting facility once enabled, or contact the repository owner privately. Do not attach real configuration files, passwords, UUIDs, server addresses, or decrypted output to a public issue.
 
 ## Scope
 

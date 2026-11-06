@@ -129,7 +129,7 @@ export function redact(value: Json): Json {
 }
 
 export function safeFilename(name: string): string {
-  const stem = name.replace(/^.*[\\/]/, '').replace(/\.(npvt|npvs)$/i, '')
+  const stem = name.replace(/^.*[\\/]/, '').replace(/\.(npvt|npvs|npvo)$/i, '')
     .replace(/[\u0000-\u001f\u007f-\u009f<>:"/\\|?*]/g, '_').replace(/^\.+|\.+$/g, '').trim().slice(0, 100);
   return stem || 'config';
 }

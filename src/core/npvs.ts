@@ -113,7 +113,8 @@ function unwrap(envelope: Envelope, password: string): Uint8Array {
     if (envelope.info.version !== 5) ensure(object(envelope.header?.passphrase ?? null) && (envelope.header!.passphrase as JsonObject).kdf === 'pbkdf2-hmac-sha256', 'UNSUPPORTED', 'الگوریتم گذرواژه پشتیبانی نمی‌شود.');
     const key = passphraseKey(password, envelope.salt, envelope.iterations);
     try { return open(key, envelope.wrap.subarray(0, 12), envelope.wrap.subarray(12), envelope.salt); }
-    catch { key.fill(0); throw new DecodeError('BAD_PASSWORD', 'گذرواژه نادرست است، یا بلوک کلید فایل آسیب دیده است.'); }
+    catch { throw new DecodeError('BAD_PASSWORD', 'گذرواژه نادرست است، یا بلوک کلید فایل آسیب دیده است.'); }
+    finally { key.fill(0); }
   }
   if (envelope.info.version === 5) {
     const key = gen2KDK(gen2A16(envelope.salt), envelope.configID);

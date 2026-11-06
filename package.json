@@ -1,21 +1,21 @@
 {
   "name": "open-npv",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "description": "Open NPV — local-first NPVT/NPVS configuration extractor. Persian RTL, offline-ready PWA, no uploads.",
   "license": "AGPL-3.0-only",
   "author": {
     "name": "Kourosh",
-    "url": "https://github.com/kourosh242"
+    "url": "https://github.com/Kourosh242"
   },
-  "homepage": "https://kourosh242.github.io/open-npv/",
+  "homepage": "https://kourosh242.github.io/open-NPV/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kourosh242/open-npv.git"
+    "url": "git+https://github.com/Kourosh242/open-NPV.git"
   },
   "bugs": {
-    "url": "https://github.com/kourosh242/open-npv/issues"
+    "url": "https://github.com/Kourosh242/open-NPV/issues"
   },
   "keywords": [
     "npvt",
@@ -41,8 +41,7 @@
     "test:browser": "node tests/browser.mjs",
     "check": "npm run typecheck && npm test && npm run build",
     "verify": "npm run check && npm run test:browser",
-    "preview": "node scripts/serve.mjs",
-    "release:zip": "node scripts/release-zip.mjs"
+    "preview": "node scripts/serve.mjs"
   },
   "dependencies": {
     "@noble/ciphers": "1.3.0",

@@ -1,6 +1,6 @@
 import { build } from 'esbuild';
 import { cp, mkdir, rm, readFile, writeFile, readdir } from 'node:fs/promises';
-import { join, relative } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { createHash } from 'node:crypto';
 import { zipSync } from 'fflate';
 
@@ -45,9 +45,9 @@ async function siteFiles(dir) {
 }
 const files = await siteFiles('site');
 const hash = createHash('sha256');
-for (const file of files) { hash.update(relative('site', file)); hash.update(await readFile(file)); }
+for (const file of files) { hash.update(relative('site', file).replaceAll(sep, '/')); hash.update(await readFile(file)); }
 const version = hash.digest('hex').slice(0, 12);
-const core = ['./', ...files.map(file => './' + relative('site', file).replaceAll('\\', '/')).filter(file => file !== './index.html')];
+const core = ['./', ...files.map(file => './' + relative('site', file).replaceAll(sep, '/')).filter(file => file !== './index.html')];
 // './' already supplies index.html; include the explicit URL for hosts that redirect directory requests.
 core.splice(1, 0, './index.html');
 const sw = `/* Open NPV — AGPL-3.0-only. Only application assets are cached. */

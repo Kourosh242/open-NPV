@@ -106,6 +106,19 @@ test('NPVO1 and npvs1 sentinels decode without executing content', () => {
   assert.equal(result.authenticated, false);
 });
 
+test('embedded share links keep endpoint and name (ss included)', () => {
+  const ss = 'ss://' + base64(utf8('aes-256-gcm:pw@[2001:db8::5]:8388'), true) + '#my-ss';
+  const root = { configs: [{ note: ss }, { note: 'vless://vless-id-uuid@vm.example.invalid:443?security=none#my-vless' }] };
+  const result = extractConfigurations(root);
+  const ssItem = result.find(item => item.protocol === 'ss')!;
+  assert.equal(ssItem.host, '2001:db8::5');
+  assert.equal(ssItem.port, 8388);
+  assert.equal(ssItem.name, 'my-ss');
+  const vless = result.find(item => item.protocol === 'vless')!;
+  assert.equal(vless.host, 'vm.example.invalid');
+  assert.equal(vless.port, 443);
+});
+
 test('redaction also masks share-link strings embedded in raw JSON', () => {
   const raw = { uri: 'vless://11111111-2222-4333-8444-555555555555@example.invalid:443?sid=abc#name', nested: { link: 'vmess://eyJpZCI6InNlY3JldCJ9' } };
   const masked = redact(raw) as { uri: string; nested: { link: string } };
