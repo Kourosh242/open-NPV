@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0d151d">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Open NPV؛ استخراج محلی و آفلاین کانفیگ از فایل‌های NPVT و NPVS. بدون آپلود و بدون ردیابی، با خروجی لینک اشتراک و JSON کامل.">
+  <meta name="author" content="Kourosh — github.com/kourosh242">
+  <meta property="og:title" content="Open NPV — استخراج کانفیگ از NPVT و NPVS">
+  <meta property="og:description" content="فایل‌های NPVT و NPVS را روی دستگاه خودت به لینک اشتراک و JSON تبدیل کن. بدون آپلود، حتی آفلاین.">
+  <meta property="og:type" content="website">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>Open NPV — استخراج کانفیگ از NPVT و NPVS</title>
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="preload" href="./assets/Vazirmatn.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./theme.js"></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+<svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M19 12H5m7-7-7 7 7 7"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8m-8 4h5"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0m-4 8v2"/></symbol>
+  <symbol id="i-unlock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 7.5-2M12 15v2"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.6 5.2A9.9 9.9 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 3.9M6.2 6.2A17 17 0 0 0 2 12s4 7 10 7a9.7 9.7 0 0 0 4.2-.9M3 3l18 18M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0m-11 4a6 6 0 0 1 8 0m-4 4h.01"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4 2.5 20h19zM12 10v4m0 3h.01"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.2-1.5 6.2-6.7A5.2 5.2 0 0 0 18.9 4a4.9 4.9 0 0 0-.1-3.6s-1.1-.3-3.7 1.4a12.6 12.6 0 0 0-6.6 0C5.9.1 4.8.4 4.8.4A4.9 4.9 0 0 0 4.7 4a5.2 5.2 0 0 0-1.4 3.6c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 0 0-.9 2.6V21" transform="translate(0 1.5) scale(0.92)"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 4v5h-5"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5M3 17l9 5 9-5"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+</defs></svg>
+
+<a class="skip-link" href="#workspace">رفتن به ابزار</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="./" aria-label="Open NPV، صفحهٔ اصلی">
+      <img src="./icons/icon.svg" width="40" height="40" alt="">
+      <span><b>Open</b> NPV<small>استخراج محلی کانفیگ</small></span>
+    </a>
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <a href="#workspace">ابزار</a>
+      <a href="#formats">پشتیبانی</a>
+      <a href="#guide">راهنما</a>
+      <button class="text-button" type="button" data-dialog="privacy-dialog">حریم خصوصی</button>
+    </nav>
+    <div class="header-actions">
+      <a class="icon-button" href="https://github.com/kourosh242/open-npv" target="_blank" rel="noopener noreferrer" aria-label="کد منبع روی GitHub" title="کد منبع روی GitHub"><svg class="icon"><use href="#i-github"/></svg></a>
+      <button id="install-button" class="button small ghost" type="button" hidden><svg class="icon"><use href="#i-download"/></svg><span>نصب</span></button>
+      <button id="theme-button" class="icon-button" type="button" aria-label="تغییر پوسته" title="تغییر پوسته"><svg class="icon"><use href="#i-sun"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero container" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="status-dot"></span>متن‌باز · پردازش روی دستگاهٔ شما</p>
+      <h1 id="hero-title">کانفیگ‌هایت را از فایل <span>بیرون بکش.</span></h1>
+      <p class="lead">فایل‌های <b dir="ltr">NPVT</b> و <b dir="ltr">NPVS</b> را به لینک اشتراک و <b dir="ltr">JSON</b> کامل تبدیل کن. بدون آپلود، بدون حساب کاربری؛ بعد از یک بار بارگذاری، حتی بدون اینترنت.</p>
+      <div class="hero-actions">
+        <button id="hero-pick" class="button primary large" type="button"><svg class="icon"><use href="#i-file"/></svg>انتخاب فایل</button>
+        <button id="hero-demo" class="button ghost large" type="button"><svg class="icon"><use href="#i-layers"/></svg>امتحان با نمونهٔ ساختگی</button>
+      </div>
+      <ul class="trust-row">
+        <li><svg class="icon"><use href="#i-shield"/></svg>هیچ فایلی آپلود نمی‌شود</li>
+        <li><svg class="icon"><use href="#i-wifi"/></svg>کارکرد آفلاین</li>
+        <li><svg class="icon"><use href="#i-code"/></svg>متن‌باز AGPL-3.0</li>
+      </ul>
+    </div>
+    <div class="hero-art" aria-hidden="true" dir="ltr">
+      <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+      <div class="art-label">YOUR FILE. YOUR CONFIG.</div>
+      <div class="file-tile"><span class="tile-icon"><svg class="icon"><use href="#i-file"/></svg></span><div><strong>config.npvt</strong><small>ENCRYPTED CONTAINER</small></div><span class="file-dot"></span></div>
+      <div class="flow-line"><span></span><svg class="icon"><use href="#i-arrow"/></svg><span></span><div class="unlock-medallion"><svg class="icon"><use href="#i-unlock"/></svg></div></div>
+      <div class="config-tile">
+        <div class="terminal-dots"><i></i><i></i><i></i><span>OUTPUT PREVIEW</span></div>
+        <div><b>vless</b><span>://</span><i>••••••••••••</i><em>:443</em></div>
+        <div><b>vmess</b><span>://</span><i>••••••••••</i><em>:443</em></div>
+        <div><b>ss</b><span>://</span><i>••••••••••••••</i><em>:8388</em></div>
+        <footer><svg class="icon"><use href="#i-check"/></svg>Decrypted locally</footer>
+      </div>
+      <span class="art-note"><svg class="icon"><use href="#i-lock"/></svg>0 bytes uploaded</span>
+    </div>
+  </section>
+
+  <div class="container">
+    <div id="status-bar" class="status-bar" role="status">
+      <span class="status-dot"></span>
+      <span id="status-text">در حال آماده‌سازی نسخهٔ آفلاین…</span>
+      <span id="queue-progress" class="queue-progress" hidden></span>
+      <button id="update-button" class="text-button" type="button" hidden><svg class="icon"><use href="#i-refresh"/></svg>به‌روزرسانی</button>
+    </div>
+  </div>
+
+  <section id="workspace" class="workspace container" aria-label="استخراج کانفیگ">
+    <div class="input-column">
+      <section class="panel input-panel" aria-labelledby="input-title">
+        <div class="panel-heading">
+          <h2 id="input-title"><span class="step-number">۱</span>فایل را وارد کن</h2>
+          <span class="tiny-label">ورودی</span>
+        </div>
+        <div id="dropzone" class="dropzone">
+          <div class="upload-symbol"><svg class="icon"><use href="#i-upload"/></svg></div>
+          <h3>فایل را اینجا رها کن</h3>
+          <p>یا از دستگاهت انتخاب کن</p>
+          <button id="pick-button" class="button primary" type="button"><svg class="icon"><use href="#i-file"/></svg>انتخاب فایل</button>
+          <div class="format-chips" dir="ltr"><span>.npvt</span><span>.npvs</span><span>.npvo</span></div>
+          <small>تا ۲۰ فایل · هر فایل حداکثر ۱۶ مگابایت</small>
+        </div>
+        <input id="file-input" type="file" accept=".npvt,.npvs,.npvo" multiple hidden>
+        <details class="paste-details">
+          <summary><svg class="icon"><use href="#i-chevron"/></svg>یا محتوای متنی را جای‌گذاری کن</summary>
+          <label for="paste-input" class="sr-only">محتوای متنی فایل</label>
+          <textarea id="paste-input" dir="ltr" spellcheck="false" placeholder="NPVT1&#10;..." maxlength="4194304"></textarea>
+          <p class="field-hint">فقط متن <span dir="ltr">NPVT1</span> یا <span dir="ltr">NPVO1</span> تا ۴ مگابایت؛ فایل باینری NPVS را انتخاب کن.</p>
+          <button id="paste-button" class="button secondary full" type="button">بررسی متن</button>
+        </details>
+        <div class="privacy-note">
+          <svg class="icon"><use href="#i-shield"/></svg>
+          <div><strong>فایل شما، فقط برای شما</strong><p>فایل، گذرواژه و خروجی به هیچ سروری ارسال نمی‌شوند و در حافظهٔ دائمی مرورگر ذخیره نمی‌شوند.</p></div>
+        </div>
+        <button id="demo-button" class="demo-button" type="button">اول با یک نمونهٔ ساختگی امتحان کن<svg class="icon"><use href="#i-arrow"/></svg></button>
+      </section>
+    </div>
+
+    <section class="panel output-panel" aria-labelledby="output-title">
+      <div class="panel-heading">
+        <h2 id="output-title"><span class="step-number">۲</span>کانفیگ‌ها را بردار</h2>
+        <span id="result-count" class="tiny-label">خروجی</span>
+      </div>
+
+      <div id="empty-state" class="empty-state">
+        <div class="empty-visual" aria-hidden="true"><div class="empty-window"><div class="terminal-dots"><i></i><i></i><i></i></div><span class="code-line wide"></span><span class="code-line"></span><span class="code-line short"></span><div class="empty-badge"><svg class="icon"><use href="#i-code"/></svg></div></div></div>
+        <h3>از فایل پوشیده به کانفیگ روشن</h3>
+        <p>بعد از انتخاب فایل، لینک‌های اشتراک و تنظیمات خام اینجا ظاهر می‌شوند.</p>
+        <ol class="empty-steps"><li><span>۱</span>انتخاب فایل</li><li><span>۲</span>بازگشایی محلی</li><li><span>۳</span>کپی یا دانلود</li></ol>
+      </div>
+
+      <div id="results-toolbar" class="results-toolbar" hidden>
+        <div class="search-row">
+          <div class="search-field">
+            <svg class="icon"><use href="#i-search"/></svg>
+            <label class="sr-only" for="search-input">جست‌وجوی کانفیگ</label>
+            <input id="search-input" type="search" placeholder="جست‌وجو در نام، پروتکل یا آدرس… (کلید /)" autocomplete="off">
+            <button id="search-clear" class="icon-button tiny" type="button" aria-label="پاک کردن جست‌وجو" hidden><svg class="icon"><use href="#i-x"/></svg></button>
+          </div>
+          <button id="reveal-toggle" class="reveal-button" type="button" aria-pressed="false"><svg class="icon"><use href="#i-eye"/></svg><span>نمایش اطلاعات محرمانه</span></button>
+        </div>
+        <div id="protocol-filters" class="protocol-filters" role="group" aria-label="فیلتر پروتکل"></div>
+        <div class="batch-actions">
+          <button id="copy-all" class="button small primary" type="button"><svg class="icon"><use href="#i-copy"/></svg><span class="btn-label">کپی لینک‌ها</span><b id="copy-count" class="count-pill"></b></button>
+          <button id="download-all" class="button small secondary" type="button"><svg class="icon"><use href="#i-download"/></svg><span>دانلود ZIP</span></button>
+          <button id="clear-button" class="button small danger-ghost" type="button"><svg class="icon"><use href="#i-trash"/></svg>پاک‌سازی</button>
+        </div>
+        <p id="toolbar-note" class="toolbar-note">نمایش امن فعال است؛ کپی و دانلود همیشه خروجی کامل می‌دهند.</p>
+      </div>
+
+      <div id="results" class="results"></div>
+      <div id="filter-empty" class="filter-empty" hidden>
+        <svg class="icon"><use href="#i-search"/></svg>
+        <p>هیچ کانفیگی با این فیلتر پیدا نشد.</p>
+        <button id="reset-filters" class="button small ghost" type="button">حذف فیلترها</button>
+      </div>
+    </section>
+  </section>
+
+  <section id="formats" class="container formats" aria-labelledby="formats-title">
+    <div class="section-heading"><h2 id="formats-title">چه چیزی پشتیبانی می‌شود؟</h2><p>شفاف، بدون ادعای بیش از واقعیت.</p></div>
+    <div class="format-grid">
+      <article class="format-card"><span class="format-badge ok"><svg class="icon"><use href="#i-check"/></svg></span><h3 dir="ltr">NPVT1</h3><p>جدول‌های white-box و شمارندهٔ ۱۲۸ بیتی. متادیتای قفل به‌عنوان کانفیگ گزارش نمی‌شود.</p></article>
+      <article class="format-card"><span class="format-badge ok"><svg class="icon"><use href="#i-check"/></svg></span><h3 dir="ltr">NPVS v0 / v1 / v5</h3><p>کلید برنامه یا گذرواژهٔ محلی؛ ChaCha20-Poly1305 با بررسی AAD و تگ‌ها.</p></article>
+      <article class="format-card"><span class="format-badge ok"><svg class="icon"><use href="#i-check"/></svg></span><h3 dir="ltr">NPVO1</h3><p>خروجی باز JSON و نشانگرهای <span dir="ltr">npvs1:</span> بدون اجرای هیچ محتوایی.</p></article>
+      <article class="format-card"><span class="format-badge warn"><svg class="icon"><use href="#i-alert"/></svg></span><h3>خارج از محدوده</h3><p>پوش گیرنده‌محور (ECDH) و فایل‌های <span dir="ltr">npv2 / npv4 / npvtsub</span> پشتیبانی نمی‌شوند.</p></article>
+    </div>
+    <div class="protocol-strip">
+      <span class="proto vless">VLESS</span><span class="proto vmess">VMESS</span><span class="proto trojan">TROJAN</span><span class="proto ss">SHADOWSOCKS</span>
+      <span class="proto-note">لینک اشتراک برای این چهار پروتکل؛ SSH و موارد ناسازگار فقط JSON کامل.</span>
+    </div>
+  </section>
+
+  <section id="guide" class="container guide panel" aria-labelledby="guide-title">
+    <div class="guide-heading"><p class="eyebrow">قبل از شروع</p><h2 id="guide-title">چند نکتهٔ مهم</h2><p>دانستن این‌ها جلوی سوءتفاهم را می‌گیرد.</p></div>
+    <div class="guide-items">
+      <details open><summary>چطور بدون اینترنت از ابزار استفاده کنم؟<svg class="icon"><use href="#i-chevron"/></svg></summary><p>یک بار نسخهٔ HTTPS را باز کن و منتظر پیام «نسخهٔ آفلاین آماده است» بمان. بعد می‌توانی ابزار را نصب کنی یا همان صفحه را آفلاین باز کنی. پاک کردن داده‌های سایت، حالت خصوصی یا کمبود فضای مرورگر می‌تواند کش را حذف کند.</p></details>
+      <details><summary>گذرواژهٔ فایل کجا وارد می‌شود؟<svg class="icon"><use href="#i-chevron"/></svg></summary><p>اگر فایل گذرواژه داشته باشد، یک کادر روی همان فایل ظاهر می‌شود. گذرواژه فقط در حافظهٔ همین صفحه و برای باز کردن همان فایل استفاده می‌شود؛ ذخیره، لاگ یا ارسال نمی‌شود. رمز را در چت یا سایت دیگری نفرست.</p></details>
+      <details><summary>چرا بعضی کانفیگ‌ها فقط JSON دارند؟<svg class="icon"><use href="#i-chevron"/></svg></summary><p>لینک اشتراک همهٔ قابلیت‌های Xray، مسیریابی، DNS یا افزونه‌ها را حمل نمی‌کند. هرجا تبدیل بدون اتلاف ممکن نباشد، لینک ناقص نمی‌سازیم و JSON کامل را نگه می‌داریم.</p></details>
+      <details><summary>باز شدن فایل یعنی کانفیگ سالم است؟<svg class="icon"><use href="#i-chevron"/></svg></summary><p>نه. ابزار به سرورها وصل نمی‌شود و پینگ نمی‌گیرد. در NPVS تگ‌های AEAD بررسی می‌شوند، اما هویت سازنده مستقلاً تأیید نمی‌شود و NPVT1 اصالت‌سنجی رمزنگاری‌شده ندارد.</p></details>
+      <details><summary>خروجی‌ها چقدر محرمانه‌اند؟<svg class="icon"><use href="#i-chevron"/></svg></summary><p>خیلی. لینک و JSON می‌توانند شامل UUID، رمز، آدرس سرور و کلیدهای اتصال باشند. کلیپ‌بورد و فایل دانلودشده خارج از کنترل برنامه‌اند؛ آن‌ها را فقط با افراد مورداعتماد به اشتراک بگذار.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand-block">
+      <span class="footer-brand">Open NPV</span>
+      <p>ابزار مستقل و متن‌باز؛ وابسته به سازندگان NPV Tunnel یا NapsternetV نیست.</p>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/kourosh242" target="_blank" rel="noopener noreferrer"><svg class="icon"><use href="#i-github"/></svg>سازنده: kourosh242</a>
+      <a href="https://github.com/kourosh242/open-npv" target="_blank" rel="noopener noreferrer">کد منبع</a>
+      <a href="./source.zip" download>دانلود سورس همین نسخه</a>
+      <button class="text-button" type="button" data-dialog="about-dialog">پروانه و منابع</button>
+    </div>
+  </div>
+  <div class="container footer-meta"><span dir="ltr">AGPL-3.0-only</span><span>بدون تله‌متری · بدون آپلود</span><span dir="ltr">v0.2.0</span></div>
+</footer>
+
+<div id="mobile-bar" class="mobile-bar" hidden>
+  <button id="mobile-copy" class="button primary" type="button"><svg class="icon"><use href="#i-copy"/></svg><span class="btn-label">کپی لینک‌ها</span></button>
+  <button id="mobile-zip" class="button secondary" type="button"><svg class="icon"><use href="#i-download"/></svg>ZIP</button>
+</div>
+
+<div id="drop-overlay" class="drop-overlay" aria-hidden="true"><div><svg class="icon"><use href="#i-upload"/></svg><strong>فایل را همین‌جا رها کن</strong><span dir="ltr">.npvt · .npvs · .npvo</span></div></div>
+
+<dialog id="privacy-dialog" aria-labelledby="privacy-title">
+  <div class="dialog-heading"><h2 id="privacy-title">حریم خصوصی، به‌صورت فنی</h2><button class="icon-button" type="button" data-close aria-label="بستن"><svg class="icon"><use href="#i-x"/></svg></button></div>
+  <ul class="privacy-list">
+    <li>فایل‌ها با File API و در Web Worker پردازش می‌شوند؛ هیچ درخواست آپلودی وجود ندارد.</li>
+    <li>کانفیگ، گذرواژه و خروجی در localStorage، IndexedDB یا Cache API ذخیره نمی‌شوند. فقط انتخاب پوسته ذخیره می‌شود.</li>
+    <li>کش آفلاین فقط فایل‌های خود برنامه را نگه می‌دارد. آنالیتیکس، تبلیغات، فونت خارجی و CDN نداریم.</li>
+    <li>«پاک‌سازی» نتایج را حذف و پردازشگر را متوقف می‌کند. صفر کردن قطعی همهٔ کپی‌های حافظه در مرورگر قابل تضمین نیست.</li>
+    <li>خروجی دانلودشده و متن کپی‌شده می‌توانند محرمانه باشند؛ آن‌ها را جای مطمئن نگه دار.</li>
+    <li>فایل را فقط وقتی پردازش کن که مالک آن هستی یا اجازهٔ بررسی داری.</li>
+  </ul>
+  <p class="muted">می‌توانی بعد از بار اول اینترنت را قطع کنی یا در ابزار شبکهٔ مرورگر، نبود درخواست‌های خروجی را ببینی.</p>
+</dialog>
+
+<dialog id="about-dialog" aria-labelledby="about-title">
+  <div class="dialog-heading"><h2 id="about-title">کد منبع و قدردانی</h2><button class="icon-button" type="button" data-close aria-label="بستن"><svg class="icon"><use href="#i-x"/></svg></button></div>
+  <p>Open NPV نسخهٔ ۰٫۲٫۰ — نرم‌افزار آزاد با پروانهٔ AGPL-3.0-only. سازنده: <a href="https://github.com/kourosh242" target="_blank" rel="noopener noreferrer">kourosh242</a>.</p>
+  <p>هستهٔ بازگشایی، برگردان TypeScript از پیاده‌سازی Pantegnos با ذکر نسخهٔ ثابت منبع است. الگوریتم‌های عمومی از Noble و فشرده‌سازی ZIP از fflate استفاده می‌کنند. فونت وزیرمتن با پروانهٔ SIL OFL به‌صورت محلی بارگذاری می‌شود.</p>
+  <div class="source-links">
+    <a class="button secondary" href="./source.zip" download><svg class="icon"><use href="#i-download"/></svg>سورس همین نسخه</a>
+    <a class="button ghost" href="./LICENSE.txt">پروانه</a>
+    <a class="button ghost" href="./NOTICE.txt">منابع و پروانه‌ها</a>
+  </div>
+  <p class="muted">این پروژه مستقل است و هیچ وابستگی رسمی به NPV Tunnel یا NapsternetV ندارد.</p>
+</dialog>
+
+<dialog id="update-dialog" aria-labelledby="update-title">
+  <div class="dialog-heading"><h2 id="update-title">به‌روزرسانی نسخه</h2><button class="icon-button" type="button" data-close aria-label="بستن"><svg class="icon"><use href="#i-x"/></svg></button></div>
+  <p>نسخهٔ جدید آماده است. با به‌روزرسانی، صفحه دوباره بارگذاری می‌شود و <strong>نتایج فعلی پاک می‌شوند</strong>. اگر خروجی لازم داری، اول کپی یا دانلود کن.</p>
+  <div class="dialog-actions"><button id="confirm-update" class="button primary" type="button">به‌روزرسانی کن</button><button class="button ghost" type="button" data-close>بعداً</button></div>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<p id="sr-status" class="sr-only" role="status" aria-live="polite"></p>
+<noscript><div class="noscript">این ابزار برای پردازش محلی به JavaScript نیاز دارد. هیچ پردازش سمت سروری وجود ندارد.</div></noscript>
+</body>
+</html>

@@ -1,0 +1,59 @@
+Open NPV 0.2.0
+Copyright (C) 2026 Kourosh (https://github.com/kourosh242) and Open NPV contributors
+SPDX-License-Identifier: AGPL-3.0-only
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License version 3 as published by
+the Free Software Foundation. Distributed WITHOUT ANY WARRANTY; see LICENSE.
+The complete corresponding source for the deployed build is in source.zip at
+the same path as the application, and in this repository.
+
+UPSTREAM FORMAT IMPLEMENTATION
+-------------------------------
+Pantegnos contributors — https://github.com/FrontierTM/Pantegnos
+Pinned commit: 1bb2a6743e6d1dc85e9d5e38edad68975ad1fc37
+License: GNU AGPL-3.0-only (the current upstream license, not an older MIT version)
+
+The following TypeScript files are ports/adaptations of the format parsing,
+white-box table networks, key derivation, and URI mapping in upstream files
+internal/modules/impl/npvt.go, npvs.go, npvs_wb.go, npvs_gen2.go,
+npvs_gen2_wb.go and npvs_open.go:
+  src/core/whitebox.ts
+  src/core/npvt.ts
+  src/core/npvs.ts
+  src/core/convert.ts
+
+Binary format tables in vendor/pantegnos/assets are from that commit, except
+npvt_last.bin, which is the tboxesLast array extracted from npvt.go without
+changing its values. SHA-256 checksums and provenance are recorded in
+vendor/pantegnos/provenance.json. Upstream license is also retained at
+vendor/pantegnos/LICENSE. These tables implement a proprietary format; their
+inclusion is not an endorsement by the application vendor.
+
+tests/reference/generate.go is a synthetic fixture generator that runs inside
+the pinned upstream Go test package. It contains no private user samples.
+
+THIRD-PARTY LIBRARIES
+---------------------
+@noble/ciphers 1.3.0 — Copyright (c) 2022 Paul Miller — MIT
+@noble/hashes 1.8.0 — Copyright (c) 2022 Paul Miller — MIT
+fflate 0.8.3 — Copyright (c) 2023 Arjun Barrett — MIT
+Their license texts are distributed in public/assets/LICENSE-*.txt and in the
+built site's assets directory. No cryptographic primitive was reimplemented;
+the proprietary white-box format transforms are the ported portion.
+
+FONT
+----
+Vazirmatn — Copyright 2015 The Vazirmatn Project Authors
+https://github.com/rastikerdar/vazirmatn
+SIL Open Font License 1.1; full text in public/assets/FONT-LICENSE.txt.
+The font binary was obtained from the IR-Toolbox project's distributed assets.
+
+DESIGN REFERENCE
+----------------
+The author's own IR-Toolbox (https://github.com/Kourosh242/IR-Toolbox) was reviewed as an offline-first PWA
+reference. Open NPV has its own interface and application code. IR-Toolbox's
+MIT license is retained at vendor/IR-Toolbox-MIT.txt for attribution.
+
+Open NPV is independent and is not affiliated with NPV Tunnel, NapsternetV,
+Vonmatrix, or Napsternet Labs. Product names identify file compatibility only.

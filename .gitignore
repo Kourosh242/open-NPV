@@ -1,0 +1,14 @@
+node_modules/
+.cache/
+.test-build/
+site/
+*.log
+.DS_Store
+.env
+.env.*
+private_samples/
+private-samples/
+*.private.*
+playwright-report/
+test-results/
+release/

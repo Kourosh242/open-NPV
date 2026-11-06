@@ -1,0 +1,35 @@
+{
+  "upstream": "https://github.com/FrontierTM/Pantegnos",
+  "commit": "1bb2a6743e6d1dc85e9d5e38edad68975ad1fc37",
+  "license": "AGPL-3.0-only",
+  "files": {
+    "gen2_tables.bin.z": {
+      "bytes": 434981,
+      "sha256": "3c297858ae146c3fcee5402dbcad19da8ac79eb0cde6a3bdb4c3bc35c2090389"
+    },
+    "mbl.bin": {
+      "bytes": 16384,
+      "sha256": "ce47fc525ac2ee90fe9b6665db77fc96efdadb9aaad137287c6d5e5cd01b97d7"
+    },
+    "npvt_last.bin": {
+      "bytes": 4096,
+      "sha256": "6e61f062c93e2abcc803d8fb77724baf6baa461d27d6e265fb547efc2b1c2c9d"
+    },
+    "tboxes_last.bin": {
+      "bytes": 4096,
+      "sha256": "aa2bf6c91cf89508782bccdbc9cd89af748ed217746cad50c0d5ba42c4bd1683"
+    },
+    "tboxes_last_v2.bin": {
+      "bytes": 4096,
+      "sha256": "6e61f062c93e2abcc803d8fb77724baf6baa461d27d6e265fb547efc2b1c2c9d"
+    },
+    "tyboxes.bin": {
+      "bytes": 16384,
+      "sha256": "eef608f1764a5a5dc7fe27d115dbf6f18315e0cbf4da4c18a7ca0e8186661037"
+    },
+    "xor.bin": {
+      "bytes": 24576,
+      "sha256": "964137fb81c87ec8d13e126c247f9158f04db187eea526386cc357f27ee3ad7d"
+    }
+  }
+}

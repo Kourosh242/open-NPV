@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.png binary
+*.woff2 binary
+*.npvt binary
+*.npvs binary
+*.bin binary
+*.z binary
