@@ -15,6 +15,10 @@ All notable changes to Open NPV are documented here. This project follows
 - The offline-cache build hash no longer depends on the OS path separator, so identical
   content produces the same Service Worker version everywhere.
 - `package-lock.json` was behind `package.json`; both now match at 0.2.1.
+- Pending, locked and failed file groups are no longer hidden when a search/protocol
+  filter is active; a filter must never conceal a password prompt or an error.
+- The preview server answers only GET/HEAD (405 otherwise), strips the body for HEAD
+  and sends a correct Content-Length.
 
 ### Removed
 - First-time "publish on GitHub Pages" setup instructions and the `release:zip` helper;

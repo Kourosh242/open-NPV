@@ -154,7 +154,9 @@ function applyFilter(): void {
   let shown = 0;
   for (const group of Array.from($('results').children) as HTMLElement[]) {
     const cards = Array.from(group.querySelectorAll<HTMLElement>('.config-card'));
-    if (!cards.length) { group.hidden = active; continue; }
+    // Pending, locked and failed files stay visible: they carry a user action,
+    // not a filterable result.
+    if (!cards.length) { group.hidden = false; continue; }
     const entry = entries.find(item => item.id === Number(group.dataset.entry));
     let visible = 0;
     for (const card of cards) {
