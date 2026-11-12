@@ -58,6 +58,31 @@ jobs:
           done
           grep -q 'open-npv' site/sw.js || { echo "service worker was not generated"; exit 1; }
 
+      # If Pages is still set to "Deploy from a branch", GitHub publishes the
+      # repository (README) instead of site/, and actions/deploy-pages fails with
+      # "Get Pages site failed". The workflow token already carries `pages: write`,
+      # which is enough to switch the publishing source — no manual clicking.
+      - name: Ensure Pages publishes the built site
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          build_type=$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.build_type' 2>/dev/null || echo missing)
+          echo "Pages build_type: ${build_type}"
+          case "${build_type}" in
+            legacy)
+              echo "::warning::Pages was publishing the git branch instead of site/. Switching to GitHub Actions."
+              gh api -X PUT "repos/${GITHUB_REPOSITORY}/pages" \
+                -H "Accept: application/vnd.github+json" -f build_type=workflow >/dev/null
+              ;;
+            missing)
+              echo "::warning::Pages is not enabled; creating it for GitHub Actions."
+              gh api -X POST "repos/${GITHUB_REPOSITORY}/pages" \
+                -H "Accept: application/vnd.github+json" -f build_type=workflow >/dev/null
+              ;;
+          esac
+
       - name: Configure Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v6
