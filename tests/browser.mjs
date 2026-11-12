@@ -273,6 +273,31 @@ try {
   await page.click('#demo-button');
   await page.waitForFunction(() => document.querySelectorAll('.config-card').length === 5);
   await page.waitForSelector('#mobile-bar:not([hidden])');
+  console.log('DEBUG-MINCONTENT ' + JSON.stringify(await page.evaluate(() => {
+    const host = document.createElement('div');
+    host.style.cssText = 'position:absolute;top:0;left:-99999px;width:0;visibility:hidden;';
+    document.body.append(host);
+    const depth = node => { let d = 0; for (let el = node; el; el = el.parentElement) d++; return d; };
+    const out = [];
+    for (const element of document.querySelectorAll('body *')) {
+      if (getComputedStyle(element).display === 'none') continue;
+      const clone = element.cloneNode(true);
+      clone.style.width = 'min-content';
+      clone.style.maxWidth = 'none';
+      clone.style.position = 'static';
+      host.append(clone);
+      const width = clone.getBoundingClientRect().width;
+      clone.remove();
+      if (width < 300) continue;
+      out.push({
+        name: element.tagName.toLowerCase() + (element.id ? '#' + element.id : '') +
+          (typeof element.className === 'string' && element.className.trim() ? '.' + element.className.trim().split(/\s+/).join('.') : ''),
+        width: Math.round(width), depth: depth(element),
+      });
+    }
+    host.remove();
+    return out.sort((a, b) => b.depth - a.depth || b.width - a.width).slice(0, 15);
+  })));
   await assertNoHorizontalOverflow(page);
   const tapTargets = await page.$$eval('#mobile-bar button', nodes => nodes.map(n => Math.round(n.getBoundingClientRect().height)));
   assert.ok(tapTargets.every(height => height >= 44), 'mobile actions need >=44px tap targets');
