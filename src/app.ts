@@ -1,5 +1,5 @@
-// Open NPV — AGPL-3.0-only
-// UI layer. No network calls except same-origin application assets and the
+// SPDX-License-Identifier: AGPL-3.0-only
+// Open NPV — UI layer. No network calls except same-origin application assets and the
 // bundled synthetic demo. Files, passphrases and results never leave this page.
 import type { ConfigItem, DecodeResult, WorkerResult } from './core/types.js';
 import { MAX_FILE_BYTES, redact, safeFilename } from './core/utils.js';
@@ -51,10 +51,11 @@ function button(label: string, symbol: string, className = 'button small ghost')
   return b;
 }
 function badge(label: string, className = 'badge'): HTMLSpanElement { return h('span', className, label); }
+const faNumber = new Intl.NumberFormat('fa-IR');
 function faDigits(value: string | number): string {
   return String(value).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[Number(d)]!);
 }
-function faNum(value: number): string { return faDigits(value.toLocaleString('en-US')); }
+function faNum(value: number): string { return faNumber.format(value); }
 function sizeLabel(bytes: number): string {
   if (bytes < 1024) return `${faDigits(bytes)} بایت`;
   if (bytes < 1024 * 1024) return `${faDigits((bytes / 1024).toFixed(1))} کیلوبایت`;
@@ -513,7 +514,7 @@ async function copy(value: string, source?: HTMLButtonElement): Promise<void> {
     await navigator.clipboard.writeText(value); done();
   } catch {
     const area = h('textarea');
-    area.value = value; area.style.position = 'fixed'; area.style.opacity = '0';
+    area.value = value; area.className = 'copy-fallback'; area.setAttribute('aria-hidden', 'true');
     document.body.append(area); area.select();
     let ok = false;
     try { ok = document.execCommand('copy'); } catch { /* Explicit fallback only. */ }
@@ -547,7 +548,7 @@ async function downloadAll(trigger?: HTMLButtonElement): Promise<void> {
   });
   if (links.length) files['links.txt'] = links.join('\n') + '\n';
   files['report.json'] = JSON.stringify({
-    generator: 'Open NPV 0.2.1',
+    generator: 'Open NPV 1.0.0',
     generatedAt: new Date().toISOString(),
     filter: { protocol: protocolFilter, query: $<HTMLInputElement>('search-input').value.trim() },
     configs: report,

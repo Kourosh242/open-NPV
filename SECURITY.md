@@ -2,7 +2,7 @@
 
 Maintainer: [Kourosh](https://github.com/Kourosh242).
 
-Open NPV 0.2.x is the current series. Please report vulnerabilities through the repository's private vulnerability reporting facility once enabled, or contact the repository owner privately. Do not attach real configuration files, passwords, UUIDs, server addresses, or decrypted output to a public issue.
+Open NPV 1.0.x is the current series. Please report vulnerabilities through the repository's private vulnerability reporting facility once enabled, or contact the repository owner privately. Do not attach real configuration files, passwords, UUIDs, server addresses, or decrypted output to a public issue.
 
 ## Scope
 

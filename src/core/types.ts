@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 export type JsonObject = { [key: string]: Json };
 export type Protocol = 'vless' | 'vmess' | 'trojan' | 'ss' | 'ssh' | 'other';

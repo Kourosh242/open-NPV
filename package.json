@@ -1,6 +1,6 @@
 {
   "name": "open-npv",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Open NPV — local-first NPVT/NPVS configuration extractor. Persian RTL, offline-ready PWA, no uploads.",

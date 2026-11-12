@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { ErrorCode, Json, JsonObject } from './types.js';
 
 export const MAX_FILE_BYTES = 16 * 1024 * 1024;
@@ -49,7 +50,8 @@ export function base64(bytes: Uint8Array, urlSafe = false): string {
 
 export function unbase64(input: string): Uint8Array {
   const s = input.replace(/\s/g, '');
-  ensure(s.length > 0 && s.length <= MAX_FILE_BYTES * 2, 'LIMIT', 'دادهٔ Base64 بیش از حد بزرگ است.');
+  ensure(s.length > 0, 'FORMAT', 'Base64 معتبر نیست.');
+  ensure(s.length <= MAX_FILE_BYTES * 2, 'LIMIT', 'دادهٔ Base64 بیش از حد بزرگ است.');
   ensure(/^[A-Za-z0-9+/_-]*={0,2}$/.test(s), 'FORMAT', 'Base64 معتبر نیست.');
   ensure(!(/[+/]/.test(s) && /[-_]/.test(s)), 'FORMAT', 'الفبای Base64 مخلوط است.');
   const raw = s.replace(/=+$/, '');
@@ -58,9 +60,9 @@ export function unbase64(input: string): Uint8Array {
   const padded = normalized + '='.repeat((4 - normalized.length % 4) % 4);
   try {
     const binary = atob(padded);
-    const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
-    ensure(base64(bytes).replace(/=+$/, '') === normalized, 'FORMAT', 'Base64 غیرمتعارف است.');
-    return bytes;
+    // Unused trailing bits are tolerated (Go's decoder ignores them); the
+    // alphabet, padding and length rules above still reject malformed input.
+    return Uint8Array.from(binary, c => c.charCodeAt(0));
   } catch (error) {
     if (error instanceof DecodeError) throw error;
     throw new DecodeError('FORMAT', 'Base64 معتبر نیست.');

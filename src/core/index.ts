@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { ContainerInfo, DecodeResult, Json } from './types.js';
 import { ensure, hasMagic, object, parseJson, text } from './utils.js';
 import { decodeNPVT } from './npvt.js';

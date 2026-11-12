@@ -75,20 +75,23 @@ body {
   font-size: 15px;
   line-height: 1.85;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 /* Digits are never rewritten by the font: file names, config names and format
    versions must appear verbatim. Persian numerals are written explicitly in the
    UI strings instead, so `synthetic-v5` can never render as `synthetic-v۵`. */
 code, pre, [dir='ltr'], .mono { font-feature-settings: normal; font-variant-numeric: normal; }
 .file-header strong, .config-title h3 { font-feature-settings: normal; }
-h1, h2, h3, h4 { margin: 0; line-height: 1.5; font-weight: 800; letter-spacing: -.2px; }
+h1, h2, h3, h4 { margin: 0; line-height: 1.5; font-weight: 800; letter-spacing: -.2px; text-wrap: balance; }
 h2 { font-size: 19px; }
 h3 { font-size: 16px; }
 p { margin: 0; }
 a { color: inherit; text-decoration: none; }
 button, input, textarea, select { font: inherit; color: inherit; }
-button { cursor: pointer; }
+button { cursor: pointer; touch-action: manipulation; }
 button:disabled { opacity: .5; cursor: not-allowed; }
+::placeholder { color: var(--muted); opacity: 1; }
+.copy-fallback { position: fixed; top: 0; inset-inline-start: 0; width: 1px; height: 1px; opacity: 0; }
 ul, ol { margin: 0; }
 svg { display: inline-block; vertical-align: middle; }
 [hidden] { display: none !important; }
@@ -133,8 +136,8 @@ svg { display: inline-block; vertical-align: middle; }
   background: transparent; transition: background .16s ease, border-color .16s ease;
 }
 .icon-button:hover { background: var(--surface2); border-color: var(--border-strong); }
-.icon-button.tiny { width: 28px; height: 28px; border: 0; border-radius: 7px; }
-.icon-button.tiny .icon { width: 15px; height: 15px; }
+.icon-button.tiny { width: 32px; height: 32px; border: 0; border-radius: 8px; }
+.icon-button.tiny .icon { width: 16px; height: 16px; }
 .text-button { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; color: var(--muted); font-size: 13px; }
 .text-button:hover { color: var(--accent); }
 .text-button .icon { width: 15px; height: 15px; }
@@ -179,7 +182,7 @@ svg { display: inline-block; vertical-align: middle; }
 .tile-icon { padding: 8px; border-radius: 9px; background: color-mix(in srgb, var(--amber) 12%, transparent); color: var(--amber); }
 .file-tile strong { display: block; font-size: 14px; font-weight: 500; }
 .file-tile small { font-size: 7px; letter-spacing: 1.4px; color: var(--muted); }
-.file-dot { width: 6px; height: 6px; margin-left: auto; border-radius: 50%; background: var(--amber); }
+.file-dot { width: 6px; height: 6px; margin-inline-start: auto; border-radius: 50%; background: var(--amber); }
 .flow-line { position: absolute; top: 104px; left: 156px; display: flex; flex-direction: column; align-items: center; gap: 2px; height: 52px; color: var(--muted); }
 .flow-line > span { height: 9px; border-left: 1px dashed var(--muted); }
 .flow-line > .icon { width: 15px; height: 15px; transform: rotate(-90deg); }
@@ -190,7 +193,7 @@ svg { display: inline-block; vertical-align: middle; }
 .terminal-dots i:first-child { background: #d9958c; }
 .terminal-dots i:nth-child(2) { background: var(--amber); }
 .terminal-dots i:nth-child(3) { background: var(--accent); }
-.terminal-dots span { margin-left: auto; font-size: 7px; letter-spacing: 1.4px; color: var(--muted); }
+.terminal-dots span { margin-inline-start: auto; font-size: 7px; letter-spacing: 1.4px; color: var(--muted); }
 .config-tile > div:not(.terminal-dots) { font-size: 11px; line-height: 2.1; white-space: nowrap; }
 .config-tile b { color: var(--accent); font-weight: 500; }
 .config-tile span { color: var(--muted); }
@@ -292,7 +295,7 @@ svg { display: inline-block; vertical-align: middle; }
 .badge.locked { border-color: color-mix(in srgb, var(--amber) 35%, transparent); color: var(--amber); }
 .badge.error { border-color: color-mix(in srgb, var(--danger) 35%, transparent); color: var(--danger); }
 
-.config-card { margin-top: 12px; padding: 16px; border: 1px solid var(--border); border-radius: 14px; background: color-mix(in srgb, var(--surface2) 40%, transparent); animation: card-in .22s ease both; }
+.config-card { margin-top: 12px; padding: 16px; border: 1px solid var(--border); border-radius: 14px; background: color-mix(in srgb, var(--surface2) 40%, transparent); animation: card-in .22s ease both; content-visibility: auto; contain-intrinsic-size: auto 340px; }
 @keyframes card-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .config-top { display: flex; align-items: center; gap: 11px; }
 .protocol { min-width: 62px; padding: 6px 9px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); font: 700 11px var(--mono); text-align: center; }
@@ -302,7 +305,7 @@ svg { display: inline-block; vertical-align: middle; }
 .protocol.other, .protocol.ssh { background: var(--surface3); color: var(--muted); }
 .config-title { min-width: 0; flex: 1; }
 .config-title h3 { font-size: 13.5px; font-weight: 650; overflow-wrap: anywhere; }
-.config-title p { margin-top: 2px; color: var(--muted); font: 11.5px/1.7 var(--mono); text-align: right; overflow-wrap: anywhere; }
+.config-title p { margin-top: 2px; color: var(--muted); font: 11.5px/1.7 var(--mono); text-align: end; overflow-wrap: anywhere; }
 .config-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 11px; }
 .config-tags span { padding: 3px 8px; border-radius: 6px; background: var(--surface2); color: var(--muted); font: 10px var(--mono); }
 .uri-preview { display: block; max-height: 88px; margin-top: 12px; padding: 10px 12px; overflow: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); color: var(--muted); font: 11.5px/1.85 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; user-select: all; }
@@ -386,7 +389,7 @@ svg { display: inline-block; vertical-align: middle; }
 .mobile-bar .button { flex: 1; }
 .mobile-bar .button.secondary { flex: 0 0 auto; }
 
-dialog { width: min(580px, calc(100% - 32px)); max-height: 85vh; padding: 26px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); color: var(--text); box-shadow: 0 30px 90px #00000066; }
+dialog { width: min(580px, calc(100% - 32px)); max-height: 85vh; padding: 26px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); color: var(--text); box-shadow: 0 30px 90px #00000066; overscroll-behavior: contain; }
 dialog::backdrop { background: #051019c4; backdrop-filter: blur(5px); }
 .dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
 .dialog-heading h2 { font-size: 19px; }
@@ -461,6 +464,17 @@ dialog strong { color: var(--text); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .site-header, .mobile-bar, .status-bar, .drop-overlay { backdrop-filter: none; }
+  .site-header { background: var(--bg); }
+  .mobile-bar { background: var(--surface); }
+  dialog::backdrop { backdrop-filter: none; }
+}
+@media (forced-colors: active) {
+  .button, .icon-button, .chip, .badge, .protocol-filters .chip, dialog { border: 1px solid ButtonText; }
+  :focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+  .status-dot, .file-dot { forced-color-adjust: none; }
 }
 @media print {
   .site-header, .hero, .input-column, .results-toolbar, .mobile-bar, .site-footer, .status-bar { display: none !important; }

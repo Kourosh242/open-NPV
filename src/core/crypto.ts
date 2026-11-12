@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { chacha20poly1305 } from '@noble/ciphers/chacha';
 import { pbkdf2 } from '@noble/hashes/pbkdf2';
 import { hkdf } from '@noble/hashes/hkdf';

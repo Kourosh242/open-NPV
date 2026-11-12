@@ -13,7 +13,7 @@
 <p align="center">
   <a href="https://github.com/Kourosh242/open-NPV/actions/workflows/deploy.yml"><img alt="Deploy" src="https://github.com/Kourosh242/open-NPV/actions/workflows/deploy.yml/badge.svg"></a>
   <img alt="License" src="https://img.shields.io/badge/license-AGPL--3.0--only-blue">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.2.1-6ee7b7">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-6ee7b7">
 </p>
 
 <p align="center">
@@ -132,7 +132,7 @@ site/          خروجی قابل انتشار (در Git کامیت نمی‌ش
 
 ## تست‌ها
 
-- **۲۰ تست واحد**: ۲۴ بردار نسل ۲ و ۱۲۰ بردار CTR از اجرای مستقل Go، شش پوش ساختگی، رمز اشتباه/گم‌شده، دستکاری AEAD، فایل ناقص، Base64 و JSON ناسالم، IPv6/REALITY/Host/SNI، حفظ JSON خام، مقاومت در برابر prototype pollution.
+- **۲۷ تست واحد**: ۲۴ بردار نسل ۲ و ۱۲۰ بردار CTR از اجرای مستقل Go، شش پوش ساختگی، رمز اشتباه/گم‌شده، دستکاری AEAD، فایل ناقص، Base64 و JSON ناسالم، IPv6/REALITY/Host/SNI، حفظ JSON خام، مقاومت در برابر prototype pollution، نگه‌داری لینک ناقص داخلی به‌صورت JSON خام، رمزگشایی نشانگرهای npvs1، ماسک لینک سهروجن، تحمل توکن خالی در فهرست NPVT و ساختارشکنی Base64 با بیت‌های پایانی غیرصفر مطابق رفتار Go.
 - **تست مرورگر (Playwright)**: رمزگشایی در Worker، نمونهٔ ساختگی، تلاش دوبارهٔ گذرواژه، نمایش/پنهان‌سازی، کپی و بازخورد دکمه، دانلود TXT/JSON/ZIP، جست‌وجو و فیلتر، حذف تکی، خطای فایل خراب، کش اتمی و محدود به مسیر، **بارگذاری و رمزگشایی آفلاین**، به‌روزرسانی با رضایت کاربر، پوستهٔ بدون پرش، چیدمان موبایل، و **نبود هرگونه درخواست خارجی یا آپلود**.
 
 نمونه‌های داخل `tests/fixtures/` همگی **ساختگی** هستند (میزبان‌های `example.invalid` و کلیدهای نمایشی). هیچ فایل واقعی کاربر در مخزن نیست.

@@ -1,8 +1,9 @@
 import { createServer } from 'node:http';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, stat, realpath } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
 
 const root = resolve('site');
+const rootReal = await realpath(root).catch(() => root);
 const port = Number(process.env.PORT || 3000);
 let base = process.env.BASE_PATH || '/';
 if (!base.startsWith('/')) base = '/' + base;
@@ -25,6 +26,10 @@ const server = createServer(async (req, res) => {
     }
     let path = resolve(root, '.' + pathname);
     if (path !== root && !path.startsWith(root + sep)) { res.writeHead(403); res.end('Forbidden'); return; }
+    // Resolve symlinks: an asset must never escape the site directory.
+    const real = await realpath(path);
+    if (real !== rootReal && !real.startsWith(rootReal + sep)) { res.writeHead(403); res.end('Forbidden'); return; }
+    path = real;
     const info = await stat(path);
     if (info.isDirectory()) path = resolve(path, 'index.html');
     const data = await readFile(path);

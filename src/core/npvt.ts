@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import type { DecodeResult } from './types.js';
-import { ensure, object, parseJson, text, unbase64, unique } from './utils.js';
+import { ensure, MAX_CONFIGS, object, parseJson, text, unbase64, unique } from './utils.js';
 import { whiteboxCTR } from './whitebox.js';
 import { extractConfigurations } from './convert.js';
 
@@ -22,7 +22,10 @@ export function decodeNPVT(bytes: Uint8Array): DecodeResult {
   const configs: DecodeResult['configs'] = [];
   const seen = new Set<string>();
   for (const token of tokens) {
-    const blob = decodeToken(token);
+    const trimmed = token.trim();
+    // Upstream skips empty tokens (e.g. a trailing comma) instead of failing the file.
+    if (!trimmed) continue;
+    const blob = decodeToken(trimmed);
     ensure(blob.length >= 17, 'TRUNCATED', 'بلوک NPVT باید شامل شمارنده و داده باشد.');
     const plaintext = whiteboxCTR(blob.subarray(0, 16), blob.subarray(16), 'npvt');
     const root = parseJson(plaintext);
@@ -38,7 +41,7 @@ export function decodeNPVT(bytes: Uint8Array): DecodeResult {
       const key = config.uri || JSON.stringify(config.raw);
       if (!seen.has(key)) { seen.add(key); configs.push(config); }
     }
-    ensure(configs.length <= 2048, 'LIMIT', 'تعداد کانفیگ‌ها بیش از حد مجاز است.');
+    ensure(configs.length <= MAX_CONFIGS, 'LIMIT', 'تعداد کانفیگ‌ها بیش از حد مجاز است.');
   }
   ensure(configs.length > 0, 'EMPTY', 'کانفیگی داخل فایل پیدا نشد.');
   return {

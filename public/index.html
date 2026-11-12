@@ -11,14 +11,18 @@
   <meta property="og:description" content="فایل‌های NPVT و NPVS را روی دستگاه خودت به لینک اشتراک و JSON تبدیل کن. بدون آپلود، حتی آفلاین.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kourosh242.github.io/open-NPV/">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta property="og:locale" content="fa_IR">
+  <meta property="og:image" content="https://kourosh242.github.io/open-NPV/icons/icon-512.png">
+  <meta property="og:image:alt" content="Open NPV — استخراج محلی کانفیگ">
+  <meta name="twitter:card" content="summary">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
   <title>Open NPV — استخراج کانفیگ از NPVT و NPVS</title>
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="preload" href="./assets/Vazirmatn.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="./style.css">
   <script src="./theme.js"></script>
+  <link rel="stylesheet" href="./style.css">
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -66,7 +70,7 @@
     </nav>
     <div class="header-actions">
       <a class="icon-button" href="https://github.com/Kourosh242/open-NPV" target="_blank" rel="noopener noreferrer" aria-label="کد منبع روی GitHub" title="کد منبع روی GitHub"><svg class="icon"><use href="#i-github"/></svg></a>
-      <button id="install-button" class="button small ghost" type="button" hidden><svg class="icon"><use href="#i-download"/></svg><span>نصب</span></button>
+      <button id="install-button" class="button small ghost" type="button" hidden aria-label="نصب Open NPV روی دستگاه"><svg class="icon"><use href="#i-download"/></svg><span>نصب</span></button>
       <button id="theme-button" class="icon-button" type="button" aria-label="تغییر پوسته" title="تغییر پوسته"><svg class="icon"><use href="#i-sun"/></svg></button>
     </div>
   </div>
@@ -132,8 +136,8 @@
         <details class="paste-details">
           <summary><svg class="icon"><use href="#i-chevron"/></svg>یا محتوای متنی را جای‌گذاری کن</summary>
           <label for="paste-input" class="sr-only">محتوای متنی فایل</label>
-          <textarea id="paste-input" dir="ltr" spellcheck="false" placeholder="NPVT1&#10;..." maxlength="4194304"></textarea>
-          <p class="field-hint">فقط متن <span dir="ltr">NPVT1</span> یا <span dir="ltr">NPVO1</span> تا ۴ مگابایت؛ فایل باینری NPVS را انتخاب کن.</p>
+          <textarea id="paste-input" dir="ltr" spellcheck="false" placeholder="NPVT1&#10;…" maxlength="4194304" aria-describedby="paste-hint"></textarea>
+          <p class="field-hint" id="paste-hint">فقط متن <span dir="ltr">NPVT1</span> یا <span dir="ltr">NPVO1</span> تا ۴ مگابایت؛ فایل باینری NPVS را انتخاب کن.</p>
           <button id="paste-button" class="button secondary full" type="button">بررسی متن</button>
         </details>
         <div class="privacy-note">
@@ -224,7 +228,7 @@
       <button class="text-button" type="button" data-dialog="about-dialog">پروانه و منابع</button>
     </div>
   </div>
-  <div class="container footer-meta"><span dir="ltr">AGPL-3.0-only</span><span>بدون تله‌متری · بدون آپلود</span><span dir="ltr">v0.2.1</span></div>
+  <div class="container footer-meta"><span dir="ltr">AGPL-3.0-only</span><span>بدون تله‌متری · بدون آپلود</span><span dir="ltr">v1.0.0</span></div>
 </footer>
 
 <div id="mobile-bar" class="mobile-bar" hidden>
@@ -249,7 +253,7 @@
 
 <dialog id="about-dialog" aria-labelledby="about-title">
   <div class="dialog-heading"><h2 id="about-title">کد منبع و قدردانی</h2><button class="icon-button" type="button" data-close aria-label="بستن"><svg class="icon"><use href="#i-x"/></svg></button></div>
-  <p>Open NPV نسخهٔ ۰٫۲٫۱ — نرم‌افزار آزاد با پروانهٔ AGPL-3.0-only. سازنده: <a href="https://github.com/Kourosh242" target="_blank" rel="noopener noreferrer">Kourosh242</a>.</p>
+  <p>Open NPV نسخهٔ ۱٫۰٫۰ — نرم‌افزار آزاد با پروانهٔ AGPL-3.0-only. سازنده: <a href="https://github.com/Kourosh242" target="_blank" rel="noopener noreferrer">Kourosh242</a>.</p>
   <p>هستهٔ بازگشایی، برگردان TypeScript از پیاده‌سازی Pantegnos با ذکر نسخهٔ ثابت منبع است. الگوریتم‌های عمومی از Noble و فشرده‌سازی ZIP از fflate استفاده می‌کنند. فونت وزیرمتن با پروانهٔ SIL OFL به‌صورت محلی بارگذاری می‌شود.</p>
   <div class="source-links">
     <a class="button secondary" href="./source.zip" download><svg class="icon"><use href="#i-download"/></svg>سورس همین نسخه</a>

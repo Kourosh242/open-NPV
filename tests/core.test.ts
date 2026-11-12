@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { decodeContainer, inspectContainer } from '../src/core/index.js';
+import { decodeSentinels } from '../src/core/npvs.js';
 import { gen2A16, whiteboxCTR } from '../src/core/whitebox.js';
 import { extractConfigurations, validateShareUri } from '../src/core/convert.js';
 import { base64, parseJson, redact, safeFilename, unbase64, utf8 } from '../src/core/utils.js';
@@ -145,6 +146,48 @@ test('HTTP/h2 outbounds read httpSettings rather than inventing a TCP header', (
   assert.equal(url.searchParams.get('sni'), 'sni.example.invalid');
 });
 
+test('malformed embedded share links are preserved raw instead of aborting the whole export', () => {
+  const root = { configs: [
+    { name: 'ok', v2rayProfile: { configType: 5, server: 'example.invalid', serverPort: 443, password: 'test', network: 'tcp', security: 'none' } },
+    { note: 'ss://definitely not valid base64 @@@' },
+  ] };
+  const result = extractConfigurations(root);
+  assert.equal(result.length, 2);
+  assert.equal(result[0]!.protocol, 'vless');
+  const raw = result.find(item => item.protocol === 'other')!;
+  assert.ok(raw, 'malformed link must survive as raw output');
+  assert.equal(raw.raw, 'ss://definitely not valid base64 @@@');
+  assert.ok(raw.warnings.length > 0);
+});
+
+test('unbase64 rejects empty input as FORMAT, not LIMIT', () => {
+  assert.throws(() => unbase64(''), { code: 'FORMAT' });
+});
+
+test('npvs1 sentinels decode in place; an undecodable one is kept with a warning', () => {
+  const warnings: string[] = [];
+  const decoded = decodeSentinels({ a: 'npvs1:' + base64(utf8('example.invalid')), b: 'keep npvs1:!!! as-is', c: 'plain text' }, warnings) as Record<string, string>;
+  assert.equal(decoded.a, 'example.invalid');
+  assert.equal(decoded.b, 'keep npvs1:!!! as-is');
+  assert.equal(decoded.c, 'plain text');
+  assert.equal(warnings.length, 1);
+});
+
+test('redact masks trojan share links like other schemes', () => {
+  const masked = redact('trojan://secretpw@t.example.invalid:443?sni=front.example.invalid#name') as string;
+  assert.ok(!masked.includes('secretpw'));
+  assert.ok(masked.includes('••••••••@'));
+});
+
+test('a share-link string as the extraction root decodes; a broken one is kept raw', () => {
+  const good = extractConfigurations('vless://11111111-2222-4333-8444-555555555555@vm.example.invalid:443?security=none#x');
+  assert.equal(good[0]!.protocol, 'vless');
+  assert.equal(good[0]!.host, 'vm.example.invalid');
+  const broken = extractConfigurations('ss://broken-incomplete');
+  assert.equal(broken[0]!.protocol, 'other');
+  assert.ok(broken[0]!.warnings.length > 0);
+});
+
 test('strict Base64, JSON limits, redaction and safe filenames', () => {
   assert.deepEqual(unbase64(base64(utf8('سلام'), true)), utf8('سلام'));
   assert.throws(() => unbase64('A'), { code: 'FORMAT' });
@@ -155,4 +198,23 @@ test('strict Base64, JSON limits, redaction and safe filenames', () => {
   const pollute = parseJson('{"__proto__":{"polluted":true},"constructor":{"x":1}}');
   assert.equal(({} as Record<string, unknown>).polluted, undefined);
   assert.ok(pollute);
+});
+
+test('npvt token list tolerates empty tokens (e.g. a trailing comma)', () => {
+  const source = readFileSync(new URL('../../tests/fixtures/synthetic.npvt', import.meta.url), 'utf8').trim();
+  const withTrailingComma = decodeContainer(utf8(`${source},`));
+  const baseline = decodeContainer(fixture('synthetic.npvt'));
+  assert.equal(withTrailingComma.configs.length, baseline.configs.length);
+  assert.deepEqual(withTrailingComma.configs.map(c => c.raw), baseline.configs.map(c => c.raw));
+  const noisy = decodeContainer(utf8(`${source.split(',').join(' , ')} ,  `));
+  assert.equal(noisy.configs.length, baseline.configs.length);
+});
+
+test('unbase64 tolerates non-zero trailing bits like Go does, still rejects bad alphabet/padding', () => {
+  // 'QQ==' -> 0x41; 'QR==' carries non-zero trailing bits in the same quantum.
+  assert.deepEqual(unbase64('QQ=='), utf8('A'));
+  assert.deepEqual(unbase64('QR=='), Uint8Array.from([0x41]));
+  assert.throws(() => unbase64('=QQ'), { code: 'FORMAT' });
+  assert.throws(() => unbase64('===='), { code: 'FORMAT' });
+  assert.throws(() => unbase64('Q!Q='), { code: 'FORMAT' });
 });

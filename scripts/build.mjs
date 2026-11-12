@@ -21,7 +21,7 @@ for (const icon of manifest.icons || []) {
 }
 
 const sourceRoots = ['src', 'public', 'scripts', 'tests', 'vendor', 'docs', '.github'];
-const sourceFiles = ['package.json', 'package-lock.json', 'tsconfig.json', 'tsconfig.test.json', 'README.md', 'LICENSE', 'NOTICE', 'SECURITY.md', 'CONTRIBUTING.md', 'CHANGELOG.md', '.gitignore', '.gitattributes'];
+const sourceFiles = ['package.json', 'package-lock.json', 'tsconfig.json', 'tsconfig.test.json', 'README.md', 'LICENSE', 'NOTICE', 'SECURITY.md', 'CONTRIBUTING.md', 'CHANGELOG.md', '.gitignore', '.gitattributes', '.editorconfig'];
 const archive = {};
 async function collect(path) {
   for (const entry of await readdir(path, { withFileTypes: true })) {

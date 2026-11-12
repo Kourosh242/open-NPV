@@ -3,6 +3,49 @@
 All notable changes to Open NPV are documented here. This project follows
 [Semantic Versioning](https://semver.org/).
 
+## [1.0.0] — 2026-11-12
+
+First stable release. Audited end to end with the `find-bugs` (Sentry) and
+`web-design-guidelines` skills; the fixes below are the ones that survived
+verification on the real build and browser suite.
+
+### Fixed
+- A malformed share link embedded inside an export no longer aborts the whole
+  decode; the offending string is kept as raw, clearly-warned JSON while the
+  rest of the file converts normally.
+- Empty Base64 input now reports `FORMAT` (invalid Base64) instead of `LIMIT`
+  ("too big"), so paste/empty-field errors say what actually happened.
+- Icon-only install button kept an accessible name on mobile layouts
+  (`aria-label`; previously the label text was `display:none` and the icon is
+  `aria-hidden`).
+- Three physical `left/right` declarations replaced with logical properties
+  (`margin-inline-start`, `text-align: end`) — equivalent rendering in RTL,
+  correct in either direction.
+- The copy fallback textarea no longer needs inline styles; hidden via a class.
+
+### Changed
+- Content Security Policy hardened: `style-src 'self'` (dropped `'unsafe-inline'`);
+  no inline style attributes remain anywhere.
+- `::placeholder` colour is explicit (`--muted`) in both themes; buttons get
+  `touch-action: manipulation`; dialogs get `overscroll-behavior: contain`.
+- Placeholder copy uses the proper ellipsis character (`…`).
+
+### Hardened in the follow-up audit
+- WCAG AA contrast verified by measurement for every text/icon colour pair in both themes.
+- Keyboard/focus audit scripted and verified: skip link, dialog focus trap, focus return to trigger, `aria-pressed` toggles, 320 px layout without horizontal overflow, `prefers-reduced-motion` honoured with 220 ms card animation collapsing as specified.
+- `prefers-reduced-transparency` and `forced-colors` support added; tiny icon buttons enlarged to 32 px; `content-visibility: auto` on result cards; `text-wrap: balance` on headings; `theme.js` now runs before the stylesheet (no colour flash even in edge conditions).
+- Lightweight UX copy: `Intl.NumberFormat('fa-IR')` for counts; `aria-describedby` ties the paste hint to its textarea; `og:image` and `twitter:card` meta added.
+- Preview server resolves symlinks and refuses to serve anything outside `site/`.
+- Unit coverage extended to 27 tests (sentinels, trojan redaction, root-string salvage, empty NPVT tokens, Go-compatible trailing-bit Base64).
+- `og:locale` added alongside the existing Open Graph/Twitter meta.
+- `site/source.zip` now also ships `.editorconfig`, so the archived source matches the repository exactly.
+- `docs/UI-UX.md` section numbering fixed (۱–۷) and stray `</div>` artefacts removed from `docs/UI-UX.md` and `docs/DEPLOY.fa.md`; `SECURITY.md` now names the 1.0.x series.
+- NPVT decoder skips empty tokens between commas (matching upstream behaviour) instead of aborting the file; Base64 decoding tolerates non-zero trailing bits like Go's non-strict decoder, while keeping alphabet/padding/length checks.
+
+### Versioning
+- `package.json`, `package-lock.json`, `NOTICE`, `README` badge, the footer,
+  the about dialog and the ZIP `report.json` generator all report **1.0.0**.
+
 ## [0.2.1] — 2026-11-06
 
 ### Fixed

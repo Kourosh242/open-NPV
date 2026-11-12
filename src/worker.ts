@@ -1,5 +1,6 @@
 /// <reference lib="webworker" />
-// Open NPV — AGPL-3.0-only. All parsing, cryptography and ZIP packing stay here,
+// SPDX-License-Identifier: AGPL-3.0-only
+// Open NPV — All parsing, cryptography and ZIP packing stay here,
 // off the main thread. Nothing in this file performs network I/O.
 import { zipSync, strToU8 } from 'fflate';
 import { decodeContainer } from './core/index.js';

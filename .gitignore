@@ -12,3 +12,6 @@ private-samples/
 playwright-report/
 test-results/
 release/
+*.tgz
+.vscode/
+.idea/

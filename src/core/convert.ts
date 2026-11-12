@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import type { ConfigItem, Json, JsonObject, Protocol } from './types.js';
-import { base64, DecodeError, ensure, integer, object, parseJson, port, str, truthy, unbase64, unique } from './utils.js';
+import { base64, DecodeError, ensure, integer, MAX_CONFIGS, object, parseJson, port, str, truthy, unbase64, unique } from './utils.js';
 
 type Flat = Record<string, string>;
 const networks = new Set(['tcp', 'raw', 'ws', 'h2', 'http', 'grpc', 'kcp', 'quic', 'httpupgrade', 'xhttp']);
@@ -294,13 +294,18 @@ export function extractConfigurations(root: Json): ConfigItem[] {
   const add = (item: ConfigItem) => {
     const key = item.uri || JSON.stringify(item.raw);
     if (!seen.has(key)) { seen.add(key); items.push(item); }
-    ensure(items.length <= 2048, 'LIMIT', 'تعداد کانفیگ‌ها از حد مجاز بیشتر است.');
+    ensure(items.length <= MAX_CONFIGS, 'LIMIT', 'تعداد کانفیگ‌ها از حد مجاز بیشتر است.');
   };
   while (stack.length) {
     const value = stack.pop()!;
     ensure(++visited < 50000, 'LIMIT', 'ساختار فایل بیش از حد پیچیده است.');
     if (typeof value === 'string') {
-      if (/^(vless|vmess|trojan|ss):\/\/\S+$/i.test(value.trim())) add(uriConfiguration(value.trim()));
+      const text = value.trim();
+      // A malformed embedded link is preserved as raw JSON, not allowed to abort the whole export.
+      if (/^(vless|vmess|trojan|ss):\/\//i.test(text)) {
+        try { add(uriConfiguration(text)); }
+        catch { add({ name: 'دادهٔ بازیابی‌شده', protocol: 'other', raw: value, warnings: ['یک لینک داخلی معتبر نبود و فقط به‌صورت خام حفظ شد.'] }); }
+      }
       continue;
     }
     if (Array.isArray(value)) { for (let i = value.length - 1; i >= 0; i--) stack.push(value[i]!); continue; }
