@@ -24,6 +24,8 @@ jobs:
     name: Build and verify
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      pages_ready: ${{ steps.pages.outputs.ready }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -58,11 +60,12 @@ jobs:
           done
           grep -q 'open-npv' site/sw.js || { echo "service worker was not generated"; exit 1; }
 
-      # If Pages is still set to "Deploy from a branch", GitHub publishes the
-      # repository (README) instead of site/, and actions/deploy-pages fails with
-      # "Get Pages site failed". The workflow token already carries `pages: write`,
-      # which is enough to switch the publishing source — no manual clicking.
+      # Publishing the git branch instead of site/ makes GitHub render README.md
+      # as the "site" and makes actions/deploy-pages fail with
+      # "Get Pages site failed". Try to fix it here; if the token is not allowed
+      # to change repository settings (403), say exactly what to click once.
       - name: Ensure Pages publishes the built site
+        id: pages
         if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -70,32 +73,35 @@ jobs:
           set -eu
           build_type=$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.build_type' 2>/dev/null || echo missing)
           echo "Pages build_type: ${build_type}"
-          case "${build_type}" in
-            legacy)
-              echo "::warning::Pages was publishing the git branch instead of site/. Switching to GitHub Actions."
-              gh api -X PUT "repos/${GITHUB_REPOSITORY}/pages" \
-                -H "Accept: application/vnd.github+json" -f build_type=workflow >/dev/null
-              ;;
-            missing)
-              echo "::warning::Pages is not enabled; creating it for GitHub Actions."
-              gh api -X POST "repos/${GITHUB_REPOSITORY}/pages" \
-                -H "Accept: application/vnd.github+json" -f build_type=workflow >/dev/null
-              ;;
-          esac
+          if [ "${build_type}" = "workflow" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "::warning::Pages is not publishing from GitHub Actions; trying to switch it."
+          method=PUT
+          if [ "${build_type}" = "missing" ]; then method=POST; fi
+          if gh api -X "${method}" "repos/${GITHUB_REPOSITORY}/pages" \
+            -H "Accept: application/vnd.github+json" -f build_type=workflow >/dev/null 2>&1; then
+            echo "Pages now builds from GitHub Actions."
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "::error::GitHub Pages publishes the git branch, not the built site, so ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/ is serving README.md instead of the app. Fix once: Settings -> Pages -> Build and deployment -> Source: GitHub Actions. (The workflow token cannot change this repository setting; the API answers 403.)"
+          echo "ready=false" >> "$GITHUB_OUTPUT"
 
       - name: Configure Pages
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.pages.outputs.ready == 'true'
         uses: actions/configure-pages@v6
 
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.pages.outputs.ready == 'true'
         uses: actions/upload-pages-artifact@v5
         with:
           path: site
 
   deploy:
     name: Deploy to GitHub Pages
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && needs.build.outputs.pages_ready == 'true'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
