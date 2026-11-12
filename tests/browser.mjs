@@ -28,6 +28,86 @@ const external = [], mutations = [], consoleErrors = [];
 let browser;
 const step = name => console.log(`  ✓ ${name}`);
 
+/**
+ * Layout must be measured only once fonts and the current viewport have
+ * settled: `font-display: swap` can briefly lay text out with fallback
+ * metrics, which makes a width check flaky instead of meaningful.
+ */
+async function settleLayout(page) {
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  });
+}
+
+/**
+ * Anything wider than the viewport is a real bug on a phone: it makes the whole
+ * page scroll sideways. Report the offending elements instead of just failing,
+ * so a regression can be fixed without guessing.
+ */
+async function overflowReport(page) {
+  return page.evaluate(() => {
+    const width = window.innerWidth;
+    const name = element => element.tagName.toLowerCase() +
+      (element.id ? `#${element.id}` : '') +
+      (typeof element.className === 'string' && element.className.trim()
+        ? `.${element.className.trim().split(/\s+/).join('.')}` : '');
+    const out = { width, scrollWidth: document.documentElement.scrollWidth, offenders: [], minContent: {} };
+    for (const element of document.querySelectorAll('body *')) {
+      const style = getComputedStyle(element);
+      if (style.display === 'none' || style.visibility === 'hidden' || style.position === 'fixed') continue;
+      const rect = element.getBoundingClientRect();
+      if (!rect.width && !rect.height) continue;
+      if (rect.right <= width + 1 && rect.left >= -1) continue;
+      out.offenders.push(`${name(element)} [${Math.round(rect.left)}..${Math.round(rect.right)} of ${width}]`);
+    }
+    out.offenders = out.offenders.slice(0, 12);
+    if (out.scrollWidth > width + 1) {
+      // Intrinsic widths point at the element that refuses to shrink.
+      out.minContent.grid = getComputedStyle(document.querySelector('.workspace')).gridTemplateColumns;
+      out.minContent.narrow = matchMedia('(max-width: 980px)').matches;
+      out.minContent.fonts = document.fonts.status;
+      const host = document.createElement('div');
+      host.style.cssText = 'position:absolute;top:0;left:-99999px;width:0;visibility:hidden;';
+      document.body.append(host);
+      for (const selector of ['.workspace', '.input-column', '.input-panel', '.panel-heading', '.dropzone',
+        '.format-chips', '.paste-details', '#paste-input', '.privacy-note', '.demo-button', '.output-panel',
+        '.results-toolbar', '.search-row', '.search-field', '#search-input', '.reveal-button', '.results',
+        '.file-group', '.file-header', '.config-card', '.config-top', '.uri-preview', '.config-actions', '.toast']) {
+        const element = document.querySelector(selector);
+        if (!element) continue;
+        const clone = element.cloneNode(true);
+        clone.style.width = 'min-content';
+        clone.style.maxWidth = 'none';
+        host.append(clone);
+        const measured = Math.round(clone.getBoundingClientRect().width);
+        clone.remove();
+        if (measured >= 300) out.minContent[selector] = measured;
+      }
+      host.remove();
+    }
+    return out;
+  });
+}
+
+async function assertNoHorizontalOverflow(page) {
+  const reports = [];
+  for (const width of [320, 360, 390, 414]) {
+    await page.setViewportSize({ width, height: 844 });
+    await settleLayout(page);
+    reports.push(await overflowReport(page));
+  }
+  const broken = reports.filter(report => report.scrollWidth > report.width + 1);
+  assert.ok(
+    !broken.length,
+    'no horizontal overflow on mobile: ' + broken.map(report =>
+      `${report.width}px viewport -> scrollWidth ${report.scrollWidth}` +
+      (report.offenders.length ? ` | offenders: ${report.offenders.join(', ')}` : '') +
+      (Object.keys(report.minContent).length ? ` | min-content: ${JSON.stringify(report.minContent)}` : ''),
+    ).join(' || '),
+  );
+}
+
 try {
   await ready;
   browser = await chromium.launch({ headless: true });
@@ -233,7 +313,7 @@ try {
   await page.click('#demo-button');
   await page.waitForFunction(() => document.querySelectorAll('.config-card').length === 5);
   await page.waitForSelector('#mobile-bar:not([hidden])');
-  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), 'no horizontal overflow on mobile');
+  await assertNoHorizontalOverflow(page);
   const tapTargets = await page.$$eval('#mobile-bar button', nodes => nodes.map(n => Math.round(n.getBoundingClientRect().height)));
   assert.ok(tapTargets.every(height => height >= 44), 'mobile actions need >=44px tap targets');
   step('dialogs, pre-paint theme, mobile bar and overflow');

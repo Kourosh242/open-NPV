@@ -13,7 +13,7 @@
 <p align="center">
   <a href="https://github.com/Kourosh242/open-NPV/actions/workflows/deploy.yml"><img alt="Deploy" src="https://github.com/Kourosh242/open-NPV/actions/workflows/deploy.yml/badge.svg"></a>
   <img alt="License" src="https://img.shields.io/badge/license-AGPL--3.0--only-blue">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-6ee7b7">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-6ee7b7">
 </p>
 
 <p align="center">

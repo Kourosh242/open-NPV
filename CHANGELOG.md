@@ -3,6 +3,40 @@
 All notable changes to Open NPV are documented here. This project follows
 [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] — 2026-11-12
+
+Deployment fix release. The 1.0.0 workflow could not go green, and GitHub Pages
+was still building the repository as a Jekyll site, so the published URL served
+the README instead of the app.
+
+### Fixed
+- Grid layouts (`.workspace`, `.hero`, `.format-grid`, `.guide`) no longer use a
+  bare `1fr` track. A bare `1fr` is `minmax(auto, 1fr)`, so its automatic minimum
+  is the child's min-content width: one wide child stretched the workspace to
+  406px and made the document 420px wide — horizontal scrolling on every phone
+  width. All tracks are now `minmax(0, …)` and the columns/panels pin
+  `min-width: 0`.
+- The mobile layout assertion is no longer timing-dependent: it waits for
+  `document.fonts.ready` plus two animation frames before measuring, so
+  `font-display: swap` fallback metrics cannot produce a phantom overflow.
+- The deploy workflow cancels superseded pull-request runs only. A run on `main`
+  is never cancelled, because aborting a Pages deployment mid-flight can leave
+  the environment in a failed state.
+- The workflow now verifies the built `site/` directory before uploading it
+  (`index.html`, `app.js`, `worker.js`, `sw.js`, `style.css`, `source.zip`,
+  `demo.npvt`, icons and font) so a half-built site can never be published.
+- `docs/DEPLOY.fa.md` explains the required Pages setting (`Source: GitHub
+  Actions`) and what the "site shows the README" symptom means.
+
+### Testing
+- A failed width check now reports the offending elements and their
+  `min-content` widths instead of only the assertion text, and the check runs at
+  320/360/390/414 px.
+
+### Versioning
+- `package.json`, `package-lock.json`, the footer, the about dialog, the README
+  badge and the ZIP `report.json` generator now report **1.0.1**.
+
 ## [1.0.0] — 2026-11-12
 
 First stable release. Audited end to end with the `find-bugs` (Sentry) and
