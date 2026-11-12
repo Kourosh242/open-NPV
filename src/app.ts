@@ -548,7 +548,7 @@ async function downloadAll(trigger?: HTMLButtonElement): Promise<void> {
   });
   if (links.length) files['links.txt'] = links.join('\n') + '\n';
   files['report.json'] = JSON.stringify({
-    generator: 'Open NPV 1.0.0',
+    generator: 'Open NPV 1.0.1',
     generatedAt: new Date().toISOString(),
     filter: { protocol: protocolFilter, query: $<HTMLInputElement>('search-input').value.trim() },
     configs: report,
